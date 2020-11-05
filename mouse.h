@@ -38,6 +38,9 @@
 #define USB_DEVICE_INTERRUPT_PRIORITY (3U)
 #endif
 
+typedef enum {FALSE, TRUE} bool_t;
+
+#define USB_HID_KEYBOARD_REPORT_LENGTH (0x09U)
 #define USB_HID_MOUSE_REPORT_LENGTH (0x04U)
 #if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
 /*! @brief USB DCD charging detect status */
@@ -59,10 +62,12 @@ typedef struct _usb_hid_mouse_struct
     volatile uint64_t hwTick;
 #endif
     usb_device_handle deviceHandle;
-    class_handle_t hidHandle;
+    class_handle_t hidMouseHandle;
+    class_handle_t hidKeyboardHandle;
     TaskHandle_t applicationTaskHandle;
     TaskHandle_t deviceTaskHandle;
-    uint8_t *buffer;
+    uint8_t *mouse_buffer;
+    uint8_t *keyboard_buffer;
     uint8_t currentConfiguration;
     uint8_t currentInterfaceAlternateSetting[USB_HID_MOUSE_INTERFACE_COUNT];
     uint8_t speed;

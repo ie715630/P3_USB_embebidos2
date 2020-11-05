@@ -39,6 +39,11 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#define KEYBOARD_DELAY 25U
+#define MOUSE_DELAY 5U
+
+static bool_t openPaint_flg = FALSE;
+static bool_t drawFigure_flg = FALSE;
 
 /*******************************************************************************
  * Prototypes
@@ -68,6 +73,7 @@ extern void HW_TimerControl(uint8_t enable);
  ******************************************************************************/
 
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_MouseBuffer[USB_HID_MOUSE_REPORT_LENGTH];
+USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_KeyboardBuffer[USB_HID_KEYBOARD_REPORT_LENGTH];
 usb_hid_mouse_struct_t g_UsbDeviceHidMouse;
 
 extern usb_device_class_struct_t g_UsbDeviceHidMouseConfig;
