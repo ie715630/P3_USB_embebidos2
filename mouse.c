@@ -44,6 +44,11 @@
 
 static bool_t openPaint_flg = FALSE;
 static bool_t drawFigure_flg = FALSE;
+static bool_t openNotepad_flg = FALSE;
+static bool_t moveLeft_flg = FALSE;
+static bool_t moveRight_flg = FALSE;
+static bool_t writeText_flg = FALSE;
+static bool_t pasteText_flg = FALSE;
 
 /*******************************************************************************
  * Prototypes
@@ -161,6 +166,7 @@ void USB_DeviceIsrEnable(void)
     NVIC_SetPriority((IRQn_Type)irqNumber, USB_DEVICE_INTERRUPT_PRIORITY);
     EnableIRQ((IRQn_Type)irqNumber);
 }
+
 #if USB_DEVICE_CONFIG_USE_TASK
 void USB_DeviceTaskFn(void *deviceHandle)
 {
@@ -176,65 +182,33 @@ void USB_DeviceTaskFn(void *deviceHandle)
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
 {
-    static int8_t x = 0U;
-    static int8_t y = 0U;
-    enum
-    {
-        RIGHT,
-        DOWN,
-        LEFT,
-        UP
-    };
-    static uint8_t dir = RIGHT;
+	static uint8_t delay_count = FALSE;
+	static uint8_t keybrd_mouse_select = FALSE;
 
-    switch (dir)
-    {
-        case RIGHT:
-            /* Move right. Increase X value. */
-            g_UsbDeviceHidMouse.buffer[1] = 2U;
-            g_UsbDeviceHidMouse.buffer[2] = 0U;
-            x++;
-            if (x > 99U)
-            {
-                dir++;
-            }
-            break;
-        case DOWN:
-            /* Move down. Increase Y value. */
-            g_UsbDeviceHidMouse.buffer[1] = 0U;
-            g_UsbDeviceHidMouse.buffer[2] = 2U;
-            y++;
-            if (y > 99U)
-            {
-                dir++;
-            }
-            break;
-        case LEFT:
-            /* Move left. Discrease X value. */
-            g_UsbDeviceHidMouse.buffer[1] = (uint8_t)(-2);
-            g_UsbDeviceHidMouse.buffer[2] = 0U;
-            x--;
-            if (x < 2U)
-            {
-                dir++;
-            }
-            break;
-        case UP:
-            /* Move up. Discrease Y value. */
-            g_UsbDeviceHidMouse.buffer[1] = 0U;
-            g_UsbDeviceHidMouse.buffer[2] = (uint8_t)(-2);
-            y--;
-            if (y < 2U)
-            {
-                dir = RIGHT;
-            }
-            break;
-        default:
-            break;
-    }
-    /* Send mouse report to the host */
-    return USB_DeviceHidSend(g_UsbDeviceHidMouse.hidHandle, USB_HID_MOUSE_ENDPOINT_IN, g_UsbDeviceHidMouse.buffer,
-                             USB_HID_MOUSE_REPORT_LENGTH);
+	g_UsbDeviceHidMouse.keyboard_buffer[0] = 	0x02U; //Keyboard ID
+	g_UsbDeviceHidMouse.keyboard_buffer[3] = 	0x00U; //0x00 porque ya tenía algo antes, se reinicia
+	g_UsbDeviceHidMouse.keyboard_buffer[4] = 	0x00U; //Primer y segundo byte del buffer del teclado
+	g_UsbDeviceHidMouse.mouse_buffer[0] = 		0x01U; //Mouse ID
+	g_UsbDeviceHidMouse.mouse_buffer[1] = 		0x00U; //Boton de Mouse
+	g_UsbDeviceHidMouse.mouse_buffer[2] = 		0x00U; //Coordenada X
+	g_UsbDeviceHidMouse.mouse_buffer[3] = 		0x00U; //Coordenada Y
+
+	/** Ejecución de cada función de forma secuencial */
+
+	delay_count++;
+
+	//Teclado
+	if(!keybrd_mouse_select)
+	{
+		return USB_DeviceHidSend(g_UsbDeviceHidMouse.hidKeyboardHandle, USB_HID_MOUSE_ENDPOINT_IN,
+								 g_UsbDeviceHidMouse.keyboard_buffer, USB_HID_KEYBOARD_REPORT_LENGTH);
+	}
+	//Mouse
+	else
+	{
+		return USB_DeviceHidSend(g_UsbDeviceHidMouse.hidMouseHandle, USB_HID_MOUSE_ENDPOINT_IN,
+								 g_UsbDeviceHidMouse.mouse_buffer, USB_HID_MOUSE_REPORT_LENGTH);
+	}
 }
 
 /* The hid class callback */

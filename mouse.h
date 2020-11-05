@@ -41,7 +41,7 @@
 typedef enum {FALSE, TRUE} bool_t;
 
 #define USB_HID_KEYBOARD_REPORT_LENGTH (0x09U)
-#define USB_HID_MOUSE_REPORT_LENGTH (0x04U)
+#define USB_HID_MOUSE_REPORT_LENGTH (0x05U)
 #if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
 /*! @brief USB DCD charging detect status */
 typedef enum _usb_device_dcd_dev_status
@@ -55,6 +55,7 @@ typedef enum _usb_device_dcd_dev_status
     kUSB_DeviceDCDDectionFinished,
 } usb_device_dcd_dev_status_t;
 #endif
+
 typedef struct _usb_hid_mouse_struct
 {
 #if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U)) && \
@@ -84,5 +85,7 @@ typedef struct _usb_hid_mouse_struct
 /*******************************************************************************
  * API
  ******************************************************************************/
+
+
 
 #endif /* __USB_HID_MOUSE_H__ */
