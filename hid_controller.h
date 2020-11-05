@@ -238,8 +238,22 @@
 #define MODIFERKEYS_RIGHT_ALT 0x40U
 #define MODIFERKEYS_RIGHT_GUI 0x80U
 
-#define SIZE_OF_SQUARE 100U
+typedef enum{
+	MOUSE = 1U,
+	KEYBOARD = 2U
+}device_t;
 
+typedef enum{
+	FALSE,
+	TRUE
+}bool_t;
 
+bool_t openPaint(uint8_t* buffer);
+bool_t drawNumber(uint8_t* buffer);
+bool_t openNotepad(uint8_t* buffer);
+bool_t moveLeft(uint8_t* buffer);
+bool_t moveRight(uint8_t* buffer);
+bool_t writeNotepad(uint8_t* buffer);
+bool_t pasteNotepad(uint8_t* buffer);
 
 #endif /* P3_USB_EMBEBIDOS2_HID_CONTROLLER_H_ */

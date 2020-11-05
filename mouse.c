@@ -23,6 +23,8 @@
 #endif
 #include "mouse.h"
 
+#include "hid_controller.h"
+
 #include "fsl_device_registers.h"
 #include "clock_config.h"
 #include "board.h"
