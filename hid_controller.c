@@ -7,7 +7,7 @@
 
 #include "hid_controller.h"
 
-static global_state = 0;
+static int global_state = 0;
 
 bool_t openPaint(uint8_t* buffer)
 {

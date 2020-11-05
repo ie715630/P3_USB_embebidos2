@@ -254,7 +254,7 @@ typedef enum
 	STATE_6,
 	STATE_7,
 	STATE_8
-};
+} state_t;
 
 typedef enum{
 	FALSE,
