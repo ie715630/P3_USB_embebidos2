@@ -46,7 +46,7 @@
  */
 
 /*! @brief HID instance count */
-#define USB_DEVICE_CONFIG_HID (1U)
+#define USB_DEVICE_CONFIG_HID (2U)
 
 /*! @brief CDC ACM instance count */
 #define USB_DEVICE_CONFIG_CDC_ACM (0U)
@@ -151,9 +151,6 @@
 
 /*! @brief Whether handle the USB bus error. */
 #define USB_DEVICE_CONFIG_ERROR_HANDLING (0U)
-
-/*! @brief Whether the device charger detect feature is enabled or not. */
-#define USB_DEVICE_CONFIG_CHARGER_DETECT (0U)
 
 /* @} */
 

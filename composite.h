@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016,2019 NXP
+ * Copyright 2016 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef __USB_HID_MOUSE_H__
-#define __USB_HID_MOUSE_H__
+#ifndef __USB_DEVICE_COMPOSITE_H__
+#define __USB_DEVICE_COMPOSITE_H__
 
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -38,52 +38,21 @@
 #define USB_DEVICE_INTERRUPT_PRIORITY (3U)
 #endif
 
-#define USB_HID_KEYBOARD_REPORT_LENGTH (0x09U)
-#define USB_HID_MOUSE_REPORT_LENGTH (0x05U)
-#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
-/*! @brief USB DCD charging detect status */
-typedef enum _usb_device_dcd_dev_status
+typedef struct _usb_device_composite_struct
 {
-    kUSB_DeviceDCDDectionInit = 0x0U,
-    kUSB_DeviceDCDDectionError,
-    kUSB_DeviceDCDDectionTimeOut,
-    kUSB_DeviceDCDDectionSDP,
-    kUSB_DeviceDCDDectionCDP,
-    kUSB_DeviceDCDDectionDCP,
-    kUSB_DeviceDCDDectionFinished,
-} usb_device_dcd_dev_status_t;
-#endif
-
-typedef struct _usb_hid_mouse_struct
-{
-#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U)) && \
-    (defined(FSL_FEATURE_SOC_USB_ANALOG_COUNT) && (FSL_FEATURE_SOC_USB_ANALOG_COUNT > 0U))
-    volatile uint64_t hwTick;
-#endif
     usb_device_handle deviceHandle;
     class_handle_t hidMouseHandle;
     class_handle_t hidKeyboardHandle;
     TaskHandle_t applicationTaskHandle;
     TaskHandle_t deviceTaskHandle;
-    uint8_t *mouse_buffer;
-    uint8_t *keyboard_buffer;
-    uint8_t currentConfiguration;
-    uint8_t currentInterfaceAlternateSetting[USB_HID_MOUSE_INTERFACE_COUNT];
     uint8_t speed;
     uint8_t attach;
-#if (defined(USB_DEVICE_CONFIG_DETACH_ENABLE) && (USB_DEVICE_CONFIG_DETACH_ENABLE > 0U))
-    volatile uint8_t connectStateChanged;
-    volatile uint8_t connectState;
-#endif
-#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
-    usb_device_dcd_dev_status_t dcdDectionStatus;
-#endif
-} usb_hid_mouse_struct_t;
+    uint8_t currentConfiguration;
+    uint8_t currentInterfaceAlternateSetting[USB_COMPOSITE_INTERFACE_COUNT];
+} usb_device_composite_struct_t;
 
 /*******************************************************************************
  * API
  ******************************************************************************/
 
-
-
-#endif /* __USB_HID_MOUSE_H__ */
+#endif /* __USB_DEVICE_COMPOSITE_H__ */
