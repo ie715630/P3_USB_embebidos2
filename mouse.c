@@ -185,6 +185,7 @@ void USB_DeviceTaskFn(void *deviceHandle)
 static usb_status_t USB_DeviceHidMouseAction(void)
 {
 	static uint8_t delay_count = FALSE;
+	//FALSE es teclado, TRUE es mouse
 	static uint8_t keybrd_mouse_select = FALSE;
 
 	g_UsbDeviceHidMouse.keyboard_buffer[0] = 	0x02U; //Keyboard ID
@@ -195,7 +196,18 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 	g_UsbDeviceHidMouse.mouse_buffer[2] = 		0x00U; //Coordenada X
 	g_UsbDeviceHidMouse.mouse_buffer[3] = 		0x00U; //Coordenada Y
 
-	/** Ejecución de cada función de forma secuencial */
+	if(FALSE == openPaint_flg && KEYBOARD_DELAY<delay_count)
+	{
+		openPaint_flg = openPaint(g_UsbDeviceHidMouse.keyboard_buffer);
+		delay_count = FALSE;
+		keybrd_mouse_select = FALSE;
+	}
+	if(FALSE == drawFigure_flg && KEYBOARD_DELAY<delay_count && TRUE==openPaint_flg)
+	{
+		drawFigure_flg = Square(g_UsbDeviceHidMouse.mouse_buffer);
+		delay_count = FALSE;
+		keybrd_mouse_select = TRUE;
+	}
 
 	delay_count++;
 
