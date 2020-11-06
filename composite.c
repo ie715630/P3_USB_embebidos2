@@ -392,15 +392,19 @@ void APP_task(void *handle)
     }
 }
 
-enum states {OPEN_NOTE_BLOCKS,
+enum states {OPEN_MSPAINT,
+			 DRAW_NUMBER,
+			 OPEN_NOTE_BLOCKS,
 	         MOVE_MOUSE_LEFT_WIN,
 	         WRITE_HELLO_WORLD,
 			 COPY_TEXT,
 			 MOVE_MOUSE_RIGHT_WIN,
 			 PASTE_TEXT,
 	         NOTHING};
-enum states g_current_state =  OPEN_NOTE_BLOCKS;
+enum states g_current_state =  OPEN_MSPAINT;
 
+extern uint8_t open_paint();
+extern uint8_t draw_number();
 extern uint8_t open_note_blocks();
 extern uint8_t move_mouse_left_win();
 extern uint8_t write_hello_world();
@@ -413,6 +417,12 @@ void state_machine()
 	uint8_t task_finished = 0;
     switch(g_current_state)
     {
+    	case OPEN_MSPAINT:
+    		task_finished = open_paint();
+    		break;
+    	case DRAW_NUMBER:
+    		task_finished = draw_number();
+    		break;
         case OPEN_NOTE_BLOCKS:
             task_finished = open_note_blocks();
             break;
