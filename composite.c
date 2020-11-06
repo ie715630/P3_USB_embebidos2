@@ -397,6 +397,7 @@ enum states {OPEN_NOTE_BLOCKS,
 	         WRITE_HELLO_WORLD,
 			 COPY_TEXT,
 			 MOVE_MOUSE_RIGHT_WIN,
+			 PASTE_TEXT,
 	         NOTHING};
 enum states g_current_state =  OPEN_NOTE_BLOCKS;
 
@@ -405,6 +406,7 @@ extern uint8_t move_mouse_left_win();
 extern uint8_t write_hello_world();
 extern uint8_t copy_text();
 extern uint8_t move_mouse_right_win();
+extern uint8_t paste_text();
 
 void state_machine()
 {
@@ -425,6 +427,9 @@ void state_machine()
         	break;
         case MOVE_MOUSE_RIGHT_WIN:
         	task_finished = move_mouse_right_win();
+        	break;
+        case PASTE_TEXT:
+        	task_finished = paste_text();
         	break;
         case NOTHING:
         	task_finished = 0;

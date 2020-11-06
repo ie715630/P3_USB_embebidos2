@@ -164,8 +164,6 @@ uint8_t open_paint()
 		else if(key_counter == 9)
 		{
 			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
-//			s_UsbDeviceHidKeyboard.buffer[2] =
-//					(first_window_open)? KEY_RIGHTARROW : KEY_LEFTARROW;
 		}
 		else
 		{
@@ -184,8 +182,6 @@ uint8_t copy_text()
 	static uint16_t counter = 0;
     uint8_t return_value = 0;
 
-//    s_UsbDeviceHidKeyboard.buffer[0] = 0;
-//    s_UsbDeviceHidKeyboard.buffer[2] = 0;
 	if (counter == 200)
 	{
         s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
@@ -195,10 +191,30 @@ uint8_t copy_text()
 	{
         s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
         s_UsbDeviceHidKeyboard.buffer[2] = KEY_C;
-//		s_UsbDeviceHidKeyboard.buffer[0] = 0;
-//		s_UsbDeviceHidKeyboard.buffer[2] = KEY_COPY;
 	}
 	else if (counter == 450)
+	{
+        s_UsbDeviceHidKeyboard.buffer[0] = 0;
+        s_UsbDeviceHidKeyboard.buffer[2] = 0;
+        return_value = 1;
+	}
+
+	counter++;
+
+	return return_value;
+}
+
+uint8_t paste_text()
+{
+	static uint16_t counter = 0;
+    uint8_t return_value = 0;
+
+	if (counter == 200)
+	{
+        s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
+        s_UsbDeviceHidKeyboard.buffer[2] = KEY_V;
+	}
+	else if (counter == 250)
 	{
         s_UsbDeviceHidKeyboard.buffer[0] = 0;
         s_UsbDeviceHidKeyboard.buffer[2] = 0;
@@ -220,42 +236,6 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
                              USB_HID_KEYBOARD_ENDPOINT_IN,
                              s_UsbDeviceHidKeyboard.buffer,
                              USB_HID_KEYBOARD_REPORT_LENGTH);
-
-    // static int x = 0U;
-    // enum
-    // {
-    //     DOWN,
-    //     UP
-    // };
-    // static uint8_t dir = DOWN;
-
-    // s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
-    // switch (dir)
-    // {
-    //     case DOWN:
-    //         x++;
-    //         if (x > 200U)
-    //         {
-    //             dir++;
-    //             s_UsbDeviceHidKeyboard.buffer[2] = KEY_PAGEUP;		//Kevin Modify this to set the key values
-    //             // De este obtener el report descriptor pero integrarlos con diferentes report id
-    //             // Hay un mouse action, hacer la division si es del tecado o el maouse y mandar un report diferente para cada caso
-    //             //
-    //         }
-    //         break;
-    //     case UP:
-    //         x--;
-    //         if (x < 1U)
-    //         {
-    //             dir                              = DOWN;
-    //             s_UsbDeviceHidKeyboard.buffer[2] = KEY_PAGEDOWN;
-    //         }
-    //         break;
-    //     default:
-    //         break;
-    // }
-    // return USB_DeviceHidSend(s_UsbDeviceComposite->hidKeyboardHandle, USB_HID_KEYBOARD_ENDPOINT_IN,
-    //                          s_UsbDeviceHidKeyboard.buffer, USB_HID_KEYBOARD_REPORT_LENGTH);
 }
 
 usb_status_t USB_DeviceHidKeyboardCallback(class_handle_t handle, uint32_t event, void *param)
