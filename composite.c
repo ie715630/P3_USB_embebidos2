@@ -392,8 +392,8 @@ void APP_task(void *handle)
     }
 }
 
-enum states {OPEN_MSPAINT,
-			 DRAW_NUMBER,
+enum states {OPEN_PAINT,
+		     DRAW_NUMBER,
 			 OPEN_NOTE_BLOCKS,
 	         MOVE_MOUSE_LEFT_WIN,
 	         WRITE_HELLO_WORLD,
@@ -401,7 +401,7 @@ enum states {OPEN_MSPAINT,
 			 MOVE_MOUSE_RIGHT_WIN,
 			 PASTE_TEXT,
 	         NOTHING};
-enum states g_current_state =  OPEN_MSPAINT;
+enum states g_current_state =  OPEN_PAINT;
 
 extern uint8_t open_paint();
 extern uint8_t draw_number();
@@ -417,7 +417,7 @@ void state_machine()
 	uint8_t task_finished = 0;
     switch(g_current_state)
     {
-    	case OPEN_MSPAINT:
+    	case OPEN_PAINT:
     		task_finished = open_paint();
     		break;
     	case DRAW_NUMBER:
@@ -459,7 +459,14 @@ int main(void)
 void main(void)
 #endif
 {
-    BOARD_InitPins();
+
+
+
+
+
+
+
+	BOARD_InitPins();
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
 

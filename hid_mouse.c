@@ -27,6 +27,7 @@
 #define SIZE_DRAW 50
 
 typedef enum{
+	DOWN,
 	DOWN_1,
 	DOWN_2,
 	LEFT,
@@ -56,61 +57,61 @@ static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 uint8_t draw_number()
 {
 	uint8_t return_value = 0;
-	static uint8_t counter = 0;
-	static substate = DOWN_1;
+	static uint16_t counter = 0;
+	static substate = 0;
+	static uint16_t size = 0;
+
+	s_UsbDeviceHidMouse.buffer[0] = 1U; //click
 
 	switch(substate)
 	{
-		case DOWN_1:
-		{
-			s_UsbDeviceHidMouse.buffer[0] = 1U; //click
-			s_UsbDeviceHidMouse.buffer[1] = 0U; //x
-			s_UsbDeviceHidMouse.buffer[2] = 1U; //y
-		}
+		case 0:
+			s_UsbDeviceHidMouse.buffer[1] = 0U; //click
+			s_UsbDeviceHidMouse.buffer[2] = 0U; //x
+			s_UsbDeviceHidMouse.buffer[3] = 1U; //y
+			size = 250;
+		break;
+		case 1:
+			s_UsbDeviceHidMouse.buffer[1] = 1U; //click
+			size = 1;
 			break;
-		case DOWN_2:
-		{
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 0U;
-			s_UsbDeviceHidMouse.buffer[2] = 1U;
-		}
+		case 2:
+			s_UsbDeviceHidMouse.buffer[2] = 1;
+			s_UsbDeviceHidMouse.buffer[3] = 0U; //y
+			size = 75;
 			break;
-		case LEFT:
-		{
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
-		}
+		case 3:
+			s_UsbDeviceHidMouse.buffer[2] = 0U; //x
+			s_UsbDeviceHidMouse.buffer[3] = 1U; //y
+			size = 400;
 			break;
-		case RIGHT_1:
-		{
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
-		}
+		case 4:
+			s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
+			s_UsbDeviceHidMouse.buffer[3] = 0U; //y
+			size = 150;
 			break;
-		case RIGHT_2:
-		{
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
-		}
-			break;
-		case COMPLETE:
-			return_value = 1;
+		case 5:
+			s_UsbDeviceHidMouse.buffer[2] = 1;
+			s_UsbDeviceHidMouse.buffer[3] = 0U; //y
+			size = 300;
 			break;
 		default:
-			break;
-
-		if(counter<SIZE_DRAW)
-		{
-			counter++;
-		}
-		else
-		{
+			s_UsbDeviceHidMouse.buffer[1] = 0U; //click
+			s_UsbDeviceHidMouse.buffer[2] = 0U; //x
+			s_UsbDeviceHidMouse.buffer[3] = 0U; //y
+			return_value = 1;
 			counter = 0;
-			substate++;
-		}
+			break;
+	}
+
+	if(counter<size)
+	{
+		counter++;
+	}
+	else
+	{
+		counter = 0;
+		substate++;
 	}
 
 	return return_value;
@@ -122,23 +123,26 @@ uint8_t move_mouse_left_win()
 	uint8_t return_value = 0;
 
 	counter++;
+
+	s_UsbDeviceHidMouse.buffer[0] = 1U;
+
 	if (counter < 2000)
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 0U;
-		s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
-		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 	}
 	else if(counter < 2010)
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 1U;
-		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 1U;
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 	}
 	else
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 0U;
 		s_UsbDeviceHidMouse.buffer[1] = 0U;
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 		return_value = 1;
 		counter = 0;
 	}
@@ -153,23 +157,26 @@ uint8_t move_mouse_right_win()
 	uint8_t return_value = 0;
 
 	counter++;
+
+	s_UsbDeviceHidMouse.buffer[0] = 0x1U;
+
 	if (counter < 2000)
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 0U;
-		s_UsbDeviceHidMouse.buffer[1] = 1U;
-		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[2] = 1U;
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 	}
 	else if(counter < 2010)
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 1U;
-		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 1U;
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 	}
 	else
 	{
-		s_UsbDeviceHidMouse.buffer[0] = 0U;
 		s_UsbDeviceHidMouse.buffer[1] = 0U;
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[3] = 0U;
 		return_value = 1;
 		counter = 0;
 	}

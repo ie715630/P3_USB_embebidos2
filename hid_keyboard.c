@@ -144,7 +144,7 @@ uint8_t open_paint()
 	{
 		counter=0;
 		static uint8_t key_counter = 0;
-		static char paint_keys_string[11] = {0,
+		static char paint_keys_string[11] = {KEY_ESCAPE,
 											KEY_M,
 											KEY_S,
 											KEY_P,
@@ -154,22 +154,24 @@ uint8_t open_paint()
 											KEY_T,
 											KEY_ENTER,
 											0,
-											0
-		};
+											};
 		if(key_counter == 0)
 		{
-			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
+			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
 			s_UsbDeviceHidKeyboard.buffer[2] = paint_keys_string[key_counter];
-		}
-		else if(key_counter == 9)
-		{
-			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
 		}
 		else
 		{
 			s_UsbDeviceHidKeyboard.buffer[0] = 0;
 			s_UsbDeviceHidKeyboard.buffer[2] = paint_keys_string[key_counter];
 		}
+
+        key_counter++;
+        if (key_counter == 10)
+        {
+            key_counter = 0;
+            return_value = 1;
+        }
 	}
 
 
