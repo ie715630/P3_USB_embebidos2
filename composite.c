@@ -392,10 +392,11 @@ void APP_task(void *handle)
     }
 }
 
-enum states {OPEN_NOTE_BLOCKS, NOTHING};
+enum states {OPEN_NOTE_BLOCKS, MOVE_MOUSE_RIGHT, NOTHING};
 enum states g_current_state =  OPEN_NOTE_BLOCKS;
 
 extern uint8_t open_note_blocks();
+extern uint8_t move_mouse_right();
 
 void state_machine()
 {
@@ -405,6 +406,9 @@ void state_machine()
         case OPEN_NOTE_BLOCKS:
             task_finished = open_note_blocks();
             break;
+        case MOVE_MOUSE_RIGHT:
+        	task_finished = move_mouse_right();
+        	break;
         case NOTHING:
         	task_finished = 0;
             break;
