@@ -45,9 +45,10 @@ static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
 uint8_t open_note_blocks()
 {
     static uint8_t counter = 0;
-    counter++;
-    uint8_t return_value = 0;
     static uint8_t first_window_open = 0;
+    uint8_t return_value = 0;
+
+    counter++;
     
     s_UsbDeviceHidKeyboard.buffer[0] = 0;
     s_UsbDeviceHidKeyboard.buffer[2] = 0;
@@ -96,34 +97,48 @@ uint8_t open_note_blocks()
     return return_value;
 }
 
+uint8_t write_hello_world()
+{
+    static uint8_t counter = 0;
+    uint8_t return_value = 0;
+
+    counter++;
+
+    if (counter == 50)
+    {
+    	counter = 0;
+
+        static uint8_t key_counter = 0;
+        static char keys_string[15] = {KEY_H,
+                                       KEY_O,
+                                       KEY_L,
+                                       KEY_A,
+									   KEY_SPACEBAR,
+                                       KEY_M,
+                                       KEY_U,
+                                       KEY_N,
+                                       KEY_D,
+                                       KEY_O,
+                                       0};
+
+        s_UsbDeviceHidKeyboard.buffer[0] = 0;
+        s_UsbDeviceHidKeyboard.buffer[2] = keys_string[key_counter];
+
+        key_counter++;
+        if (key_counter == 11)
+        {
+        	key_counter = 0;
+        	return_value = 1;
+        }
+    }
+
+    return return_value;
+}
+
 extern void state_machine();
 
 static usb_status_t USB_DeviceHidKeyboardAction(void)
 {
-//    enum
-//    {
-//        OPEN_GEDIT,
-//        WRITE_HELLO_WORLD
-//    };
-//
-//    static uint8_t task_counter = OPEN_GEDIT;
-//
-//    uint8_t task_finished = 0;
-//    switch(task_counter)
-//    {
-//        case OPEN_GEDIT:
-//            task_finished = open_note_blocks();
-//            break;
-//        case WRITE_HELLO_WORLD:
-//            task_finished = 0;
-//            break;
-//    }
-//
-//    if (task_finished)
-//    {
-//        task_counter++;
-//    }
-
 	state_machine();
 
     return USB_DeviceHidSend(s_UsbDeviceComposite->hidKeyboardHandle,
