@@ -52,23 +52,24 @@ uint8_t open_gedit()
     s_UsbDeviceHidKeyboard.buffer[0] = 0;
     s_UsbDeviceHidKeyboard.buffer[2] = 0;
 
-    if (counter == 50)
+    if (counter == 100)
     {
         counter = 0;
         static uint8_t key_counter = 0;
-        static char gedit_keys_string[10] = {0,
+        static char gedit_keys_string[10] = {KEY_A,
                                              KEY_G,
                                              KEY_E,
                                              KEY_D,
                                              KEY_I,
                                              KEY_T,
                                              KEY_ENTER,
+                                             KEY_LEFTARROW,
                                              0};
 
-        if (key_counter == 0)
+        if (key_counter == 0 || key_counter == 7)
         {
         	  s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
-        	  s_UsbDeviceHidKeyboard.buffer[2] = KEY_A;
+        	  s_UsbDeviceHidKeyboard.buffer[2] = gedit_keys_string[key_counter];
         }
         else
         {
@@ -77,7 +78,7 @@ uint8_t open_gedit()
         }
 
         key_counter++;
-        if (key_counter == 8)
+        if (key_counter == 9)
         {
             key_counter = 0;
             return_value = 1;
