@@ -42,13 +42,13 @@ static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
  * Code
  ******************************************************************************/
 
-uint8_t open_gedit()
+uint8_t open_note_blocks()
 {
     static uint8_t counter = 0;
     counter++;
     uint8_t return_value = 0;
+    static uint8_t first_window_open = 0;
     
-
     s_UsbDeviceHidKeyboard.buffer[0] = 0;
     s_UsbDeviceHidKeyboard.buffer[2] = 0;
 
@@ -56,20 +56,25 @@ uint8_t open_gedit()
     {
         counter = 0;
         static uint8_t key_counter = 0;
-        static char gedit_keys_string[10] = {KEY_A,
-                                             KEY_G,
-                                             KEY_E,
-                                             KEY_D,
-                                             KEY_I,
-                                             KEY_T,
+        static char gedit_keys_string[10] = {0,
+                                             KEY_B,
+                                             KEY_L,
+                                             KEY_O,
+                                             KEY_C,
                                              KEY_ENTER,
-                                             KEY_LEFTARROW,
+                                             0,
                                              0};
 
-        if (key_counter == 0 || key_counter == 7)
+        if (key_counter == 0)
         {
         	  s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
         	  s_UsbDeviceHidKeyboard.buffer[2] = gedit_keys_string[key_counter];
+        }
+        else if (key_counter == 6)
+        {
+        	  s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
+        	  s_UsbDeviceHidKeyboard.buffer[2] =
+        			  (first_window_open)? KEY_RIGHTARROW : KEY_LEFTARROW;
         }
         else
         {
@@ -78,40 +83,48 @@ uint8_t open_gedit()
         }
 
         key_counter++;
-        if (key_counter == 9)
+        if (key_counter == 8)
         {
             key_counter = 0;
-            return_value = 1;
+            if (first_window_open)
+            {
+            	return_value = 1;
+            }
+            first_window_open = 1;
         }
     }
     return return_value;
 }
 
+extern void state_machine();
+
 static usb_status_t USB_DeviceHidKeyboardAction(void)
 {
-    enum
-    {
-        OPEN_GEDIT,
-        WRITE_HELLO_WORLD
-    };
+//    enum
+//    {
+//        OPEN_GEDIT,
+//        WRITE_HELLO_WORLD
+//    };
+//
+//    static uint8_t task_counter = OPEN_GEDIT;
+//
+//    uint8_t task_finished = 0;
+//    switch(task_counter)
+//    {
+//        case OPEN_GEDIT:
+//            task_finished = open_note_blocks();
+//            break;
+//        case WRITE_HELLO_WORLD:
+//            task_finished = 0;
+//            break;
+//    }
+//
+//    if (task_finished)
+//    {
+//        task_counter++;
+//    }
 
-    static uint8_t task_counter = OPEN_GEDIT;
-
-    uint8_t task_finished = 0;
-    switch(task_counter)
-    {
-        case OPEN_GEDIT:
-            task_finished = open_gedit();
-            break;
-        case WRITE_HELLO_WORLD:
-            task_finished = 0;
-            break;
-    }
-    
-    if (task_finished)
-    {
-        task_counter++;
-    }
+	state_machine();
 
     return USB_DeviceHidSend(s_UsbDeviceComposite->hidKeyboardHandle,
                              USB_HID_KEYBOARD_ENDPOINT_IN,

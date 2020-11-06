@@ -392,6 +392,31 @@ void APP_task(void *handle)
     }
 }
 
+enum states {OPEN_NOTE_BLOCKS, NOTHING};
+enum states g_current_state =  OPEN_NOTE_BLOCKS;
+
+extern uint8_t open_note_blocks();
+
+void state_machine()
+{
+	uint8_t task_finished = 0;
+    switch(g_current_state)
+    {
+        case OPEN_NOTE_BLOCKS:
+            task_finished = open_note_blocks();
+            break;
+        case NOTHING:
+        	task_finished = 0;
+            break;
+    }
+
+    if (task_finished)
+    {
+    	g_current_state++;
+    }
+
+}
+
 #if defined(__CC_ARM) || (defined(__ARMCC_VERSION)) || defined(__GNUC__)
 int main(void)
 #else
