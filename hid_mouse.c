@@ -116,7 +116,7 @@ uint8_t draw_number()
 	return return_value;
 }
 
-uint8_t move_mouse_left()
+uint8_t move_mouse_left_win()
 {
 	static uint16_t counter = 0;
 	uint8_t return_value = 0;
@@ -129,6 +129,37 @@ uint8_t move_mouse_left()
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
 	}
 	else if(counter < 1010)
+	{
+		s_UsbDeviceHidMouse.buffer[0] = 1U;
+		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[2] = 0U;
+	}
+	else
+	{
+		s_UsbDeviceHidMouse.buffer[0] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 0U;
+		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		return_value = 1;
+		counter = 0;
+	}
+
+	return return_value;
+}
+
+
+uint8_t move_mouse_right_win()
+{
+	static uint16_t counter = 0;
+	uint8_t return_value = 0;
+
+	counter++;
+	if (counter < 1500)
+	{
+		s_UsbDeviceHidMouse.buffer[0] = 0U;
+		s_UsbDeviceHidMouse.buffer[1] = 1U;
+		s_UsbDeviceHidMouse.buffer[2] = 0U;
+	}
+	else if(counter < 1510)
 	{
 		s_UsbDeviceHidMouse.buffer[0] = 1U;
 		s_UsbDeviceHidMouse.buffer[1] = 0U;

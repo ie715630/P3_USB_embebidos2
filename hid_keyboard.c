@@ -100,7 +100,6 @@ uint8_t open_note_blocks()
 uint8_t write_hello_world()
 {
     static uint8_t counter = 0;
-    static uint8_t first_window_open = 0;
     uint8_t return_value = 0;
 
     counter++;
@@ -129,11 +128,7 @@ uint8_t write_hello_world()
         if (key_counter == 11)
         {
         	key_counter = 0;
-        	if(first_window_open)
-        	{
-        		return_value = 1;
-        	}
-        	first_window_open = 1;
+        	return_value = 1;
         }
     }
 
@@ -169,8 +164,8 @@ uint8_t open_paint()
 		else if(key_counter == 9)
 		{
 			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
-			s_UsbDeviceHidKeyboard.buffer[2] =
-					(first_window_open)? KEY_RIGHTARROW : KEY_LEFTARROW;
+//			s_UsbDeviceHidKeyboard.buffer[2] =
+//					(first_window_open)? KEY_RIGHTARROW : KEY_LEFTARROW;
 		}
 		else
 		{
@@ -179,6 +174,38 @@ uint8_t open_paint()
 		}
 	}
 
+
+	return return_value;
+}
+
+
+uint8_t copy_text()
+{
+	static uint16_t counter = 0;
+    uint8_t return_value = 0;
+
+//    s_UsbDeviceHidKeyboard.buffer[0] = 0;
+//    s_UsbDeviceHidKeyboard.buffer[2] = 0;
+	if (counter == 200)
+	{
+        s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
+        s_UsbDeviceHidKeyboard.buffer[2] = KEY_E;
+	}
+	else if (counter == 400)
+	{
+        s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_CTRL;
+        s_UsbDeviceHidKeyboard.buffer[2] = KEY_C;
+//		s_UsbDeviceHidKeyboard.buffer[0] = 0;
+//		s_UsbDeviceHidKeyboard.buffer[2] = KEY_COPY;
+	}
+	else if (counter == 450)
+	{
+        s_UsbDeviceHidKeyboard.buffer[0] = 0;
+        s_UsbDeviceHidKeyboard.buffer[2] = 0;
+        return_value = 1;
+	}
+
+	counter++;
 
 	return return_value;
 }
