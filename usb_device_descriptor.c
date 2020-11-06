@@ -204,7 +204,7 @@ uint8_t g_UsbDeviceHidMouseReportDescriptor[] = {
     0x09U, 0x01U, /* Usage (Pointer) */
 
     0xA1U, 0x00U, /* Collection (Physical) */
-//	0x85, 0x01, // Report ID (1)				// Kevin is this right? https://www.microchip.com/forums/m1001939.aspx
+	0x85, 0x01, // Report ID (1)				// Kevin is this right? https://www.microchip.com/forums/m1001939.aspx
     0x05U, 0x09U, /* Usage Page (Buttons) */
     0x19U, 0x01U, /* Usage Minimum (01U) */
     0x29U, 0x03U, /* Usage Maximum (03U) */
@@ -623,7 +623,7 @@ usb_status_t USB_DeviceGetHidDescriptor(usb_device_handle handle, usb_device_get
     return kStatus_USB_InvalidRequest;
 }
 
-#define COMPOSITE_REPORT
+//#define COMPOSITE_REPORT
 /* Get hid report descriptor request */
 usb_status_t USB_DeviceGetHidReportDescriptor(usb_device_handle handle,
                                               usb_device_get_hid_report_descriptor_struct_t *hidReportDescriptor)

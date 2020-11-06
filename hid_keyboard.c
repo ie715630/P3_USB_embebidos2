@@ -48,21 +48,36 @@ uint8_t open_gedit()
     counter++;
     uint8_t return_value = 0;
     
+
+    s_UsbDeviceHidKeyboard.buffer[0] = 0;
+    s_UsbDeviceHidKeyboard.buffer[2] = 0;
+
     if (counter == 50)
     {
         counter = 0;
         static uint8_t key_counter = 0;
-        static char gedit_keys_string[10] = {KEY_LEFT_GUI,
+        static char gedit_keys_string[10] = {0,
                                              KEY_G,
                                              KEY_E,
                                              KEY_D,
                                              KEY_I,
                                              KEY_T,
+                                             KEY_ENTER,
                                              0};
-        s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
-        s_UsbDeviceHidKeyboard.buffer[2] = gedit_keys_string[key_counter];
+
+        if (key_counter == 0)
+        {
+        	  s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
+        	  s_UsbDeviceHidKeyboard.buffer[2] = KEY_A;
+        }
+        else
+        {
+            s_UsbDeviceHidKeyboard.buffer[0] = 0; 
+            s_UsbDeviceHidKeyboard.buffer[2] = gedit_keys_string[key_counter];
+        }
+
         key_counter++;
-        if (key_counter == 7)
+        if (key_counter == 8)
         {
             key_counter = 0;
             return_value = 1;
