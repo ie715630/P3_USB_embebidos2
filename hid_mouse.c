@@ -24,6 +24,17 @@
  * Definitions
  ******************************************************************************/
 
+#define SIZE_DRAW 50
+
+typedef enum{
+	DOWN_1,
+	DOWN_2,
+	LEFT,
+	RIGHT_1,
+	RIGHT_2,
+	COMPLETE
+} number_t;
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -41,6 +52,69 @@ static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+
+uint8_t draw_number()
+{
+	uint8_t return_value = 0;
+	static uint8_t counter = 0;
+	static substate = DOWN_1;
+
+	switch(substate)
+	{
+		case DOWN_1:
+		{
+			s_UsbDeviceHidMouse.buffer[1] = 1U; //click
+			s_UsbDeviceHidMouse.buffer[2] = 0U; //x
+			s_UsbDeviceHidMouse.buffer[3] = 1U; //y
+		}
+			break;
+		case DOWN_2:
+		{
+			s_UsbDeviceHidMouse.buffer[1] = 1U;
+			s_UsbDeviceHidMouse.buffer[2] = 0U;
+			s_UsbDeviceHidMouse.buffer[3] = 1U;
+		}
+			break;
+		case LEFT:
+		{
+			s_UsbDeviceHidMouse.buffer[1] = 1U;
+			s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
+			s_UsbDeviceHidMouse.buffer[3] = 0U;
+		}
+			break;
+		case RIGHT_1:
+		{
+			s_UsbDeviceHidMouse.buffer[1] = 1U;
+			s_UsbDeviceHidMouse.buffer[2] = 1U;
+			s_UsbDeviceHidMouse.buffer[3] = 0U;
+		}
+			break;
+		case RIGHT_2:
+		{
+			s_UsbDeviceHidMouse.buffer[1] = 1U;
+			s_UsbDeviceHidMouse.buffer[2] = 1U;
+			s_UsbDeviceHidMouse.buffer[3] = 0U;
+		}
+			break;
+		case COMPLETE:
+			return_value = 1;
+			break;
+		default:
+			break;
+
+		if(counter<SIZE_DRAW)
+		{
+			counter++;
+		}
+		else
+		{
+			counter = 0;
+			substate++;
+		}
+	}
+
+	return return_value;
+}
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
