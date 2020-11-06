@@ -63,37 +63,37 @@ uint8_t draw_number()
 	{
 		case DOWN_1:
 		{
-			s_UsbDeviceHidMouse.buffer[1] = 1U; //click
-			s_UsbDeviceHidMouse.buffer[2] = 0U; //x
-			s_UsbDeviceHidMouse.buffer[3] = 1U; //y
+			s_UsbDeviceHidMouse.buffer[0] = 1U; //click
+			s_UsbDeviceHidMouse.buffer[1] = 0U; //x
+			s_UsbDeviceHidMouse.buffer[2] = 1U; //y
 		}
 			break;
 		case DOWN_2:
 		{
-			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
-			s_UsbDeviceHidMouse.buffer[3] = 1U;
+			s_UsbDeviceHidMouse.buffer[0] = 1U;
+			s_UsbDeviceHidMouse.buffer[1] = 0U;
+			s_UsbDeviceHidMouse.buffer[2] = 1U;
 		}
 			break;
 		case LEFT:
 		{
-			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
-			s_UsbDeviceHidMouse.buffer[3] = 0U;
+			s_UsbDeviceHidMouse.buffer[0] = 1U;
+			s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
+			s_UsbDeviceHidMouse.buffer[2] = 0U;
 		}
 			break;
 		case RIGHT_1:
 		{
+			s_UsbDeviceHidMouse.buffer[0] = 1U;
 			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = 1U;
-			s_UsbDeviceHidMouse.buffer[3] = 0U;
+			s_UsbDeviceHidMouse.buffer[2] = 0U;
 		}
 			break;
 		case RIGHT_2:
 		{
+			s_UsbDeviceHidMouse.buffer[0] = 1U;
 			s_UsbDeviceHidMouse.buffer[1] = 1U;
-			s_UsbDeviceHidMouse.buffer[2] = 1U;
-			s_UsbDeviceHidMouse.buffer[3] = 0U;
+			s_UsbDeviceHidMouse.buffer[2] = 0U;
 		}
 			break;
 		case COMPLETE:

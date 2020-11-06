@@ -100,6 +100,7 @@ uint8_t open_note_blocks()
 uint8_t write_hello_world()
 {
     static uint8_t counter = 0;
+    static uint8_t first_window_open = 0;
     uint8_t return_value = 0;
 
     counter++;
@@ -128,11 +129,58 @@ uint8_t write_hello_world()
         if (key_counter == 11)
         {
         	key_counter = 0;
-        	return_value = 1;
+        	if(first_window_open)
+        	{
+        		return_value = 1;
+        	}
+        	first_window_open = 1;
         }
     }
 
     return return_value;
+}
+
+uint8_t open_paint()
+{
+	uint8_t return_value = 0;
+	static uint8_t counter = 0;
+	counter++;
+	if(counter == 100)
+	{
+		counter=0;
+		static uint8_t key_counter = 0;
+		static char paint_keys_string[11] = {0,
+											KEY_M,
+											KEY_S,
+											KEY_P,
+											KEY_A,
+											KEY_I,
+											KEY_N,
+											KEY_T,
+											KEY_ENTER,
+											0,
+											0
+		};
+		if(key_counter == 0)
+		{
+			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
+			s_UsbDeviceHidKeyboard.buffer[2] = paint_keys_string[key_counter];
+		}
+		else if(key_counter == 9)
+		{
+			s_UsbDeviceHidKeyboard.buffer[0] = MODIFERKEYS_LEFT_GUI;
+			s_UsbDeviceHidKeyboard.buffer[2] =
+					(first_window_open)? KEY_RIGHTARROW : KEY_LEFTARROW;
+		}
+		else
+		{
+			s_UsbDeviceHidKeyboard.buffer[0] = 0;
+			s_UsbDeviceHidKeyboard.buffer[2] = paint_keys_string[key_counter];
+		}
+	}
+
+
+	return return_value;
 }
 
 extern void state_machine();
